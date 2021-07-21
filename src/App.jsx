@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import CoinTable from "./components/CoinTable";
+import CoinNavbar from "./components/CoinNavbar";
+import CoinSearch from "./components/CoinSearch";
+
+import { getCoins, getSearchCoin } from "./helpers/CoinsFetch";
 
 const App = () => {
   const [coins, setCoins] = useState({
@@ -7,6 +11,8 @@ const App = () => {
     loading: true,
     update: false,
   });
+
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
     //acciones
@@ -16,43 +22,40 @@ const App = () => {
         loading: false,
         update: true,
       });
-
+      setInputValue("");
       // console.log(respuesta);
     });
-  }, []);
+  }, [coins.update]);
 
-  const getCoins = async () => {
-    const resp = await fetch("https://api.coincap.io/v2/assets?limit=10");
-    const informacion = await resp.json();
-    // console.log(informacion.data);
-    return informacion.data;
-  };
+  useEffect(() => {
+    getSearchCoin(inputValue).then((resultado) => {
+      // setCoins({
+      //   datos: resultado,
+      //   loading: false,
+      //   update: true,
+      // });
 
-  // getCoins();
-
-  // if (coins.datos.length > 0) {
-  //   console.log("Datos cargados");
-  // } else {
-  //   console.log("loading...");
-  // }
-
-  // coins.datos.length > 0
-  //   ? console.log("Datos cargados")
-  //   : console.log("loading...");
+      setCoins((c) => ({ ...c, datos: resultado }));
+    });
+  }, [inputValue]);
 
   return (
-    <div className="container">
-      <div className="row">
+    <>
+      <CoinNavbar setCoins={setCoins} coins={coins} />
+      <div className="container my-4">
+        <CoinSearch inputValue={inputValue} setInputValue={setInputValue} />
+        {/* <div className="row">
         <div className="col">
           <h1>Coin App</h1>
         </div>
-      </div>
-      <div className="row mt-3">
-        <div className="col">
-          <CoinTable coins={coins} />
+      </div> */}
+        <div className="row mt-2">
+          <div className="col">
+            <CoinTable coins={coins} />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
