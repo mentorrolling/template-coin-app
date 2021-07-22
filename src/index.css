@@ -9,14 +9,14 @@ body {
 }
 
 .btn-coin {
-  border-radius: 10em;
+  border-radius: 10em !important;
   background: rgb(24, 198, 131) none repeat scroll 0% 0% !important;
   transition: transform 0.2s ease 0s;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 15px -3px;
-  color: #fff;
+  color: #fff !important;
   text-shadow: none;
-  padding: 5px 20px;
-  font-weight: bold;
+  padding: 5px 20px !important;
+  font-weight: bold !important;
 }
 
 .btn-coin:hover {

@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
+import CoinNavbar from "./components/CoinNavbar";
 import CoinTable from "./components/CoinTable";
+import CoinSearch from "./components/CoinSearch";
+//Funciones Helpers
+import { getCoins, searchCoins } from "./helpers/coinsFetch";
 
 const App = () => {
   const [coins, setCoins] = useState({
@@ -7,6 +11,8 @@ const App = () => {
     loading: true,
     update: false,
   });
+
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
     //acciones
@@ -17,42 +23,36 @@ const App = () => {
         update: true,
       });
 
-      // console.log(respuesta);
+      setInputValue("");
     });
-  }, []);
+  }, [coins.update]);
 
-  const getCoins = async () => {
-    const resp = await fetch("https://api.coincap.io/v2/assets?limit=10");
-    const informacion = await resp.json();
-    // console.log(informacion.data);
-    return informacion.data;
-  };
-
-  // getCoins();
-
-  // if (coins.datos.length > 0) {
-  //   console.log("Datos cargados");
-  // } else {
-  //   console.log("loading...");
-  // }
-
-  // coins.datos.length > 0
-  //   ? console.log("Datos cargados")
-  //   : console.log("loading...");
+  useEffect(() => {
+    searchCoins(inputValue).then((respuesta) => {
+      setCoins({
+        datos: respuesta,
+        loading: false,
+        update: true,
+      });
+    });
+  }, [inputValue]);
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col">
-          <h1>Coin App</h1>
+    <>
+      <CoinNavbar coins={coins} setCoins={setCoins} />
+      <div className="container mt-3">
+        <CoinSearch inputValue={inputValue} setInputValue={setInputValue} />
+        <div className="row ">
+          <div className="col">
+            {coins.loading ? (
+              <h3 className="text-white text-center">Cargando...</h3>
+            ) : (
+              <CoinTable coins={coins} />
+            )}
+          </div>
         </div>
       </div>
-      <div className="row mt-3">
-        <div className="col">
-          <CoinTable coins={coins} />
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 

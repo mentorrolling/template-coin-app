@@ -2,6 +2,7 @@ import React from "react";
 
 //Libreria para formato de números
 import numeral from "numeral";
+import CoinIcon from "./CoinIcon";
 
 const CoinTable = ({ coins }) => {
   return (
@@ -24,8 +25,11 @@ const CoinTable = ({ coins }) => {
         <tbody>
           {coins.datos.map((coin) => (
             <tr key={coin.id}>
-              <td>{coin.rank}</td>
-              <td>{coin.name}</td>
+              <th>{coin.rank}</th>
+              <td className="text-logo">
+                <CoinIcon simbolo={coin.symbol} />
+                {coin.name}
+              </td>
               <td>{numeral(coin.priceUsd).format("$0,0.00")}</td>
               <td>{numeral(coin.marketCapUsd).format("($ 0.00 a)")}</td>
               <td>{numeral(coin.vwap24Hr).format("$0,0.00")}</td>
